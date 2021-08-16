@@ -1,1 +1,10 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+{%block styles%}
+    <link href="{%static 'css/reconocimiento_facial/index.css'%}" rel="stylesheet">
+{%endblock%}
+ 
+{% block contenido %}
+    <h1>HOLA</h1>
+{% endblock %}

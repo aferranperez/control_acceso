@@ -7,9 +7,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="Alejandro Ferran, Abel Esteves"> 
+        <title>{% block title%} {%endblock%}</title>
+
+        <!-- Estilos CSS-->
+        {% block styles%} {%endblock%}
+
+        <!-- Archivos de Javascript-->
+        {% block scripts%}{%endblock%}
     </head>
     <body>
-        <h1>Holaaaa</h1>
+    {%block contenido%}{%endblock%}
     </body>
 
 </html>
