@@ -16,8 +16,11 @@ class Persona(models.Model):
     def __str__(self):
         return self.nombre
     
+    
+
 class Imagen(models.Model):
     imagen = models.ImageField(upload_to='tmp') #investigarOJOOOOOOOOO
 
     #Una persona posee varias imagenes (Relacion 1 a muchos)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
