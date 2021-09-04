@@ -18,6 +18,10 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 
+admin.site.site_header = "Citmatel | Admin "
+admin.site.site_title= "Ale"
+admin.site.index_title = "Administracion del Control de Acceso Institucional"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('reconocimiento_facial/', include('reconocimiento_facial.urls')),
