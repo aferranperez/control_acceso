@@ -1,0 +1,21 @@
+{% extends 'admin/change_list.html' %}
+{% load static %}
+ 
+
+{% block extrastyle %}
+    <link href="{%static 'css/reconocimiento_facial/admin_style/admin.css'%}" rel="stylesheet">
+    {{ block.super }}
+{% endblock %}
+    
+
+{% block object-tools %}
+    <!-- Actualizar datos en tabla de admin-->
+    <div>
+        <form action="refrescar_tabla/" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="boton">Actualizar Datos </button>
+        </form>
+    </div>
+    <br />
+    {{ block.super }}
+{% endblock %}

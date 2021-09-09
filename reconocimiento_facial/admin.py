@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.db import models
+from django.http.response import HttpResponseRedirect
+from django.urls import path
 from shutil import *
 import os
 
@@ -8,7 +9,15 @@ from .models import *
 
 #Clase para administrar el modelo Persona 
 class PersonaModelAdmin(admin.ModelAdmin):
-   
+    
+    #Modifique metodos de la clase
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('refrescar_tabla/', self.update),
+        ]
+        return my_urls + urls
+
     #Registre acciones aqui
     @admin.action(description="Mover imagenes subidas al Dataset del Trabajador")
     def mover_images_dataset(self, request, queryset):
@@ -17,7 +26,7 @@ class PersonaModelAdmin(admin.ModelAdmin):
         ficheros = os.listdir("tmp/")
         
         if ficheros == []:
-            return self.message_user(request,"No hay imágenes pendientes para subir al Dataset",level='warning') 
+            return self.message_user(request,"No hay imágenes pendientes para subir al Dataset",level='error') 
 
         for persona in queryset:
             for fichero in ficheros:
@@ -29,16 +38,42 @@ class PersonaModelAdmin(admin.ModelAdmin):
                         move(dir, dir_dest)  
                         obj.image = dir_dest
                         obj.save()
+                        
         
-        self.message_user(request,"Se han cargado las imagenes al Dataset de los Trabajadores seleccionados")       
+        self.message_user(request,"Actualice los Datos para validar cambios",level="info")       
+    
+    def update(self, request):
+        from re import split
+        model_Img = Imagen.objects.all()
+        model_Persona = self.model.objects.all()
+
+        for persona in model_Persona:
+            cont1,cont2 = 0,0
+            for imagen in model_Img:
+                if imagen.persona_id == persona.id:
+                    dir = split("/", str(imagen.image))            
+                    if str(dir[0]) == "tmp":
+                        cont1+=1             
+                        persona.imagenes_sin_subir = cont1
+                        persona.save()
+                    elif str(dir[0]) == "media":
+                        cont2+=1
+                        persona.imagenes_sin_subir = cont1
+                        persona.imagenes_en_dataset = cont2
+                        persona.save()
+
+        self.message_user(request, "Actualizado con exito", level="info")
+        return HttpResponseRedirect("../")
         
     #Registre parametros aqui
-    list_display = ["nombre","apellido", "fecha_creacion_registro", "fecha_actualizacion_registro"]
+    list_display = ["nombre","apellido", "fecha_creacion_registro", "fecha_actualizacion_registro", "imagenes_en_dataset", "imagenes_sin_subir"]
     list_filter = ["fecha_creacion_registro"]
     search_fields = ["nombre", "apellido"]
     ordering = ["nombre"]
     inlines = [InlineImage]
     actions = [mover_images_dataset]            
+    change_list_template = "reconocimiento_facial/admin/admin.html"
+
 
 admin.site.register(Persona, PersonaModelAdmin)
 
