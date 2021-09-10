@@ -26,6 +26,7 @@ class Persona(models.Model):
 
     class Meta:
         verbose_name_plural = "Trabajadores"
+        
 
 
     #Sobrescribimos el metodo save para que cree la carpeta del dataset de cada persona
@@ -40,13 +41,9 @@ class Persona(models.Model):
     def __str__(self):
         return self.nombre
 
-
-
 class Imagen(models.Model):
     persona = models.ForeignKey(Persona, on_delete=CASCADE)
     image = models.ImageField(upload_to='tmp/')
-
-    
 
 class InlineImage(admin.TabularInline):
     model = Imagen

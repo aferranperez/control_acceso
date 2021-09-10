@@ -7,6 +7,9 @@ import os
 # Register your models here.
 from .models import *
 
+#Register your views here
+from . import views
+
 #Clase para administrar el modelo Persona 
 class PersonaModelAdmin(admin.ModelAdmin):
     
@@ -15,11 +18,12 @@ class PersonaModelAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path('refrescar_tabla/', self.update),
+            path('entrenar_modelo/', views.entrenar_modelo, name='entrenar')
         ]
         return my_urls + urls
 
     #Registre acciones aqui
-    @admin.action(description="Mover imagenes subidas al Dataset del Trabajador")
+    @admin.action(description="Mover imagenes al Dataset del Trabajador")
     def mover_images_dataset(self, request, queryset):
         
         obj_Imgs = Imagen.objects.filter(image__contains="tmp/")
@@ -64,7 +68,7 @@ class PersonaModelAdmin(admin.ModelAdmin):
 
         self.message_user(request, "Actualizado con exito", level="info")
         return HttpResponseRedirect("../")
-        
+            
     #Registre parametros aqui
     list_display = ["nombre","apellido", "fecha_creacion_registro", "fecha_actualizacion_registro", "imagenes_en_dataset", "imagenes_sin_subir"]
     list_filter = ["fecha_creacion_registro"]

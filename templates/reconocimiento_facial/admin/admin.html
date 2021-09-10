@@ -11,11 +11,20 @@
 {% block object-tools %}
     <!-- Actualizar datos en tabla de admin-->
     <div>
-        <form action="refrescar_tabla/" method="POST">
-            {% csrf_token %}
-            <button type="submit" class="boton">Actualizar Datos </button>
-        </form>
+        <table>
+            <tr>
+                <form action="refrescar_tabla/" method="POST" style="width: 10%;">
+                    {% csrf_token %}
+                    <button type="submit" class="boton">Actualizar Datos </button>
+                </form>        
+            </tr>
+            <tr>
+                <a href="entrenar_modelo/"><button class="boton">Entrenar modelo</button></a>
+            </tr>
+        </table>
     </div>
+
+
     <br />
     {{ block.super }}
 {% endblock %}

@@ -1,9 +1,19 @@
 .boton{
-    background-color: #4CAF50;
+    background-color:var(--object-tools-bg);;
     border: none;
-    color: white;
-    padding: 10px 20px;
+    color: var(--object-tools-fg);
+    padding: 3px 12px;
     text-decoration: none;
-    margin: 4px 2px;
+    margin: 5px 2px;
     cursor: pointer;
+    border-radius: 15px;
+    font-weight: 400;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 20px;
+    font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+}
+.boton:hover{
+    background-color: #2a772d;  
 }
