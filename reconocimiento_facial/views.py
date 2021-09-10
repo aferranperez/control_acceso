@@ -6,3 +6,4 @@ def index(request):
 
 def entrenar_modelo(request):
     return render(request, 'reconocimiento_facial/admin/entrenar_modelo.html')
+

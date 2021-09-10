@@ -17,6 +17,7 @@ from django import urls
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
+from django.conf import settings 
 
 admin.site.site_header = "Citmatel | Admin "
 admin.site.site_title= "Ale"
@@ -26,3 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('reconocimiento_facial/', include('reconocimiento_facial.urls')),
 ]
+
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL, 
+        document_root=settings.MEDIA_ROOT)

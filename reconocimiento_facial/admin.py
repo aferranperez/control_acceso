@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
 from django.urls import path
 from shutil import *
@@ -18,7 +19,7 @@ class PersonaModelAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path('refrescar_tabla/', self.update),
-            path('entrenar_modelo/', views.entrenar_modelo, name='entrenar')
+            path('entrenar_modelo/', self.entrenar_modelo_all)
         ]
         return my_urls + urls
 
@@ -68,14 +69,23 @@ class PersonaModelAdmin(admin.ModelAdmin):
 
         self.message_user(request, "Actualizado con exito", level="info")
         return HttpResponseRedirect("../")
-            
+
+    @admin.action(description="Entrenar modelo con trabajadores seleccionados")
+    def entrenar_modelo(self, request, queryset): 
+        return render(request, 'reconocimiento_facial/admin/entrenar_modelo.html', {'model_Persona':queryset, 'user': request.user})
+
+    def entrenar_modelo_all(self, request):
+        model_Persona = self.model.objects.all()
+        return render(request, 'reconocimiento_facial/admin/entrenar_modelo.html', {'model_Persona':model_Persona})
+
+
     #Registre parametros aqui
     list_display = ["nombre","apellido", "fecha_creacion_registro", "fecha_actualizacion_registro", "imagenes_en_dataset", "imagenes_sin_subir"]
     list_filter = ["fecha_creacion_registro"]
     search_fields = ["nombre", "apellido"]
     ordering = ["nombre"]
     inlines = [InlineImage]
-    actions = [mover_images_dataset]            
+    actions = [mover_images_dataset, entrenar_modelo]            
     change_list_template = "reconocimiento_facial/admin/admin.html"
 
 

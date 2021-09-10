@@ -1,7 +1,40 @@
 {% extends 'admin/base_site.html '%}
 {% load static %}
 
+{% block extrastyle %}
+    <link href="{%static 'css/reconocimiento_facial/admin_style/admin.css'%}" rel="stylesheet">
+    <link href="{%static 'assets/W3CSS/w3.css'%}" rel="stylesheet">
+
+    {{ block.super }}
+{% endblock %}
+    
+
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Entrenar modelo') }}{% endblock %}
+
 {% block branding %}
     <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Citmatel | Admin') }}</a></h1>
 {% endblock %}
+
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="/admin/">Inicio</a>
+        › <a href="/admin/reconocimiento_facial/">Reconocimiento_Facial</a>
+        › <a href="/admin/reconocimiento_facial/persona/">Trabajadores</a>
+        › Entrenar_Modelo
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <button class="boton">Entrenar modelo</button>
+
+    {% for persona in model_Persona %}
+        <p>{{ persona.nombre }}</p>
+    {% endfor %}
+    
+    <div class="w3-light-grey w3-round">
+        <div class="w3-container w3-round w3-green" style="width:25%">25%</div>
+    </div>  
+{% endblock %}
+
