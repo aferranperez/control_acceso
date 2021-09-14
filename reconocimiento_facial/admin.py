@@ -4,6 +4,7 @@ from django.http.response import HttpResponseRedirect
 from django.urls import path
 from shutil import *
 import os
+from django.core import serializers
 
 # Register your models here.
 from .models import *
@@ -19,8 +20,9 @@ class PersonaModelAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path('refrescar_tabla/', self.update),
-            path('entrenar_modelo/', self.entrenar_modelo_all)
+            path('preentrenamiento/', self.entrenar_modelo_all),
         ]
+
         return my_urls + urls
 
     #Registre acciones aqui
@@ -72,11 +74,19 @@ class PersonaModelAdmin(admin.ModelAdmin):
 
     @admin.action(description="Entrenar modelo con trabajadores seleccionados")
     def entrenar_modelo(self, request, queryset): 
-        return render(request, 'reconocimiento_facial/admin/entrenar_modelo.html', {'model_Persona':queryset, 'user': request.user})
+        JSON_Serializer = serializers.get_serializer("json")
+        json_serializer = JSON_Serializer()
+        json_serializer.serialize(queryset)
+        estado = 'entrenamiento_parcial'
+        with open('tmp/data_personas_entrenar.json', 'w') as jsonfile:
+            json_serializer.serialize(queryset, stream=jsonfile)
 
-    def entrenar_modelo_all(self, request):
+        return render(request, 'reconocimiento_facial/admin/entrenar_modelo.html', {'model_Persona':queryset, 'estado':estado})
+
+    def entrenar_modelo_all(self, request):      
         model_Persona = self.model.objects.all()
-        return render(request, 'reconocimiento_facial/admin/entrenar_modelo.html', {'model_Persona':model_Persona})
+        estado = 'entrenamiento_total'
+        return render(request, 'reconocimiento_facial/admin/entrenar_modelo.html', {'model_Persona':model_Persona, 'estado':estado}) 
 
 
     #Registre parametros aqui
@@ -85,7 +95,7 @@ class PersonaModelAdmin(admin.ModelAdmin):
     search_fields = ["nombre", "apellido"]
     ordering = ["nombre"]
     inlines = [InlineImage]
-    actions = [mover_images_dataset, entrenar_modelo]            
+    actions = [mover_images_dataset,entrenar_modelo]            
     change_list_template = "reconocimiento_facial/admin/admin.html"
 
 

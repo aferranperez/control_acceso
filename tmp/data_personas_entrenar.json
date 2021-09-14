@@ -1,0 +1,1 @@
+[{"model": "reconocimiento_facial.persona", "pk": 66, "fields": {"nombre": "Alejandro", "apellido": "Joel Ferran Perez", "departamento": "AudioVisual", "fecha_creacion_registro": "2021-09-09T05:50:22.624Z", "fecha_actualizacion_registro": "2021-09-11T07:03:40.473Z", "CI": "123213123", "edad": 21, "imagenes_en_dataset": 6, "imagenes_sin_subir": 0}}]

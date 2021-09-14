@@ -3,8 +3,6 @@
 
 {% block extrastyle %}
     <link href="{%static 'css/reconocimiento_facial/admin_style/admin.css'%}" rel="stylesheet">
-    <link href="{%static 'assets/W3CSS/w3.css'%}" rel="stylesheet">
-
     {{ block.super }}
 {% endblock %}
     
@@ -21,20 +19,24 @@
         <a href="/admin/">Inicio</a>
         › <a href="/admin/reconocimiento_facial/">Reconocimiento_Facial</a>
         › <a href="/admin/reconocimiento_facial/persona/">Trabajadores</a>
-        › Entrenar_Modelo
+        › Entrenamiento de modelo
     </div>
 {% endblock %}
 
 
 {% block content %}
-    <button class="boton">Entrenar modelo</button>
-
-    {% for persona in model_Persona %}
-        <p>{{ persona.nombre }}</p>
-    {% endfor %}
+    <a href="{% url 'entrenar_modelo' estado %}"><button type="submit" class="boton">Entrenar_Modelo</button></a>
     
-    <div class="w3-light-grey w3-round">
-        <div class="w3-container w3-round w3-green" style="width:25%">25%</div>
-    </div>  
+
+    {% if model_Persona%}
+        {% for persona in model_Persona %}
+            <h5>{{persona.nombre}}</h5>
+        {% endfor %}
+    {% endif %}
+
+    {% if estado %}
+        <h5>{{estado}}</h5>
+    {% endif %}
+     
 {% endblock %}
 

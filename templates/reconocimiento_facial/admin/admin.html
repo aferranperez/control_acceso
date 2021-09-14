@@ -19,7 +19,10 @@
                 </form>        
             </tr>
             <tr>
-                <a href="entrenar_modelo/"><button class="boton">Entrenar modelo con todos</button></a>
+                <form action="preentrenamiento/" method="POST" style="width: 10%;">
+                    {% csrf_token %}
+                    <button class="boton" type="submit">Entrenar modelo con todos</button>
+                </form> 
             </tr>
         </table>
     </div>
