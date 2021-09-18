@@ -31,10 +31,30 @@ class Persona(models.Model):
 
     #Sobrescribimos el metodo save para que cree la carpeta del dataset de cada persona
     def save(self):
-        folder = 'media/reconocimiento_facial/' + self.nombre +' '+ self.apellido
+        persona = Persona.objects.filter(id = self.id) 
         
-        if not os.path.exists(folder):
-            os.mkdir(str(folder))
+        if persona.exists(): #estoy editando la persona
+            if persona[0].nombre != self.nombre or persona[0].apellido != self.apellido:
+
+                folder = 'media/reconocimiento_facial/' + persona[0].nombre +' '+ persona[0].apellido
+                new_folder = 'media/reconocimiento_facial/' + self.nombre +' '+ self.apellido
+                
+                if os.path.exists(folder):
+                    os.rename(folder, new_folder)
+                
+                images = Imagen.objects.filter(persona_id = self.id, image__contains = 'media/reconocimiento_facial/')
+                if images.exists():
+                    from re import split
+                    for obj in images:
+                        name_file = str(split("/", str(obj.image))[3])
+                        obj.image = new_folder + '/' + name_file
+                        print(obj.image)
+                        obj.save()
+
+        else:
+            folder = 'media/reconocimiento_facial/' + self.nombre +' '+ self.apellido   
+            if not os.path.exists(folder):
+                os.mkdir(str(folder))
         
         super(Persona, self).save()
         
@@ -43,8 +63,7 @@ class Persona(models.Model):
 
 class Imagen(models.Model):
     persona = models.ForeignKey(Persona, on_delete=CASCADE)
-    image = models.ImageField(upload_to='tmp/')
-
+    image = models.ImageField(upload_to='tmp/dataset')
+ 
 class InlineImage(admin.TabularInline):
     model = Imagen
-

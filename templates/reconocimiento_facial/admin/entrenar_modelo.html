@@ -10,7 +10,7 @@
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Entrenar modelo') }}{% endblock %}
 
 {% block branding %}
-    <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Citmatel | Admin') }}</a></h1>
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Citmatel_Admin') }}</a></h1>
 {% endblock %}
 
 
@@ -25,7 +25,7 @@
 
 
 {% block content %}
-    <a href="{% url 'entrenar_modelo' estado %}"><button type="submit" class="boton">Entrenar_Modelo</button></a>
+    <a href="{% url 'reconocimiento_facial:entrenar_modelo' %}"><button type="submit" class="boton">Entrenar_Modelo</button></a>
     
 
     {% if model_Persona%}
