@@ -1,8 +1,10 @@
-from reconocimiento_facial.models import Imagen
+from time import time
+from reconocimiento_facial.models import *
 import cv2
 import numpy as np
 from django.core.serializers import deserialize
-
+import datetime
+import time
 def entrenar_model(Modelo_Img):
 
     caras, nombres = preparar_datos(Modelo_Img)
@@ -11,8 +13,19 @@ def entrenar_model(Modelo_Img):
     face_recognizer = cv2.face.LBPHFaceRecognizer_create()
     face_recognizer.train(caras, np.array(nombres))
 
-    dir = "modulos_py/face_recognizer/modelos_entrenados/"
-    face_recognizer.save( dir + "modelo.xml")
+    tt = datetime.date.today().timetuple()
+    dir = "modulos_py/face_recognizer/modelos_entrenados/" + str(tt.tm_year) + "-" + str(tt.tm_mon) + "-" + str(tt.tm_mday) + "-" + str(time.time()) + "-" +"modelo.xml"
+    
+    face_recognizer.save(dir)
+
+    file = str(tt.tm_year) + "-" + str(tt.tm_mon) + "-" + str(tt.tm_mday) + "-" + str(time.time()) + "-" + "modelo"
+    modelo = Modelo_Entrenado.objects.create(nombre = file)
+    modelo.save()
+   
+    with open('tmp/data_personas_entrenar.json') as file:
+        for obj in deserialize("json", file):
+            Miembro_del_Modelo.objects.create(CI = obj.object.CI ,modelo_entrenado = modelo, persona = obj.object).save()  
+    
 
 def preparar_datos(Modelo_Img):
     caras = []

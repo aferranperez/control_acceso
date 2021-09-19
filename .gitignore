@@ -1,3 +1,4 @@
-.*json
+*.json
 /media/
 /tmp/
+/modulos_py/face_recognizer/modelos_entrenados/

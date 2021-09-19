@@ -9,19 +9,6 @@
     
 
 {% block object-tools %}
-    <!-- Actualizar datos en tabla de admin-->
-    <div>
-        <table>
-            <tr>
-                <form action="refrescar_tabla/" method="POST" style="width: 10%;">
-                    {% csrf_token %}
-                    <button type="submit" class="boton">Actualizar Informacion de Imágenes</button>
-                </form>        
-            </tr>
-        </table>
-    </div>
-
-
-    <br />
+    <!-- Actualizar datos en tabla de admin--> 
     {{ block.super }}
 {% endblock %}
