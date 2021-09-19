@@ -49,8 +49,9 @@ class ModelosEntrenadosAdmin(admin.ModelAdmin):
     #Registre parametros aqui
     list_display = ["nombre","fecha_creacion"]
     search_fields = ["nombre"]
-    ordering = ["nombre"]
+    ordering = ["fecha_creacion"]
     inlines = [InLineMiembros]
+    list_filter = ["fecha_creacion"]
 
     def has_add_permission(self, request):
         return False

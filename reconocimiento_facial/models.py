@@ -28,12 +28,12 @@ class Persona(models.Model):
 
     #Sobrescribimos el metodo save para que cree la carpeta del dataset de cada persona
     def save(self):
-        persona = Persona.objects.get(id = self.id) 
+        persona = Persona.objects.filter(id = self.id) 
         
-        if persona: #estoy editando la persona
-            if persona.nombre != self.nombre or persona.apellido != self.apellido:
+        if persona.exists(): #estoy editando la persona
+            if persona[0].nombre != self.nombre or persona[0].apellido != self.apellido:
 
-                folder = 'media/reconocimiento_facial/' + persona.nombre +' '+ persona.apellido
+                folder = 'media/reconocimiento_facial/' + persona[0].nombre +' '+ persona[0].apellido
                 new_folder = 'media/reconocimiento_facial/' + self.nombre +' '+ self.apellido
                 
                 if os.path.exists(folder):
