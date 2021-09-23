@@ -59,5 +59,14 @@ class ModelosEntrenadosAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj = None):
         return False
 
+class RaspberryModelAdmin(admin.ModelAdmin):
+    #Registre parametros aqui
+    list_display = ["nombre","ubicacion","is_active","is_synchronized","have_model","ip_address"]
+    list_filter = ["is_active","is_synchronized","have_model"]
+    search_fields = ["nombre"]
+    ordering = ["nombre"]
+    
+            
 admin.site.register(Persona, PersonaModelAdmin)
 admin.site.register(Modelo_Entrenado, ModelosEntrenadosAdmin)
+admin.site.register(Raspberry, RaspberryModelAdmin)

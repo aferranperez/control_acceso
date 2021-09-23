@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.db.models.deletion import CASCADE
 import os
 
+from django.db.models.fields import CharField
+
 # Create your models here.
 
 class Persona(models.Model):
@@ -23,7 +25,7 @@ class Persona(models.Model):
     imagenes_en_dataset = models.PositiveIntegerField(editable=False, default=0)
 
     class Meta:
-        verbose_name_plural = "Trabajadores"
+        verbose_name_plural = "Trabajadores del Centro"
         
 
     #Sobrescribimos el metodo save para que cree la carpeta del dataset de cada persona
@@ -115,3 +117,25 @@ class Miembro_del_Modelo(models.Model):
 class InLineMiembros(admin.TabularInline):
     model = Miembro_del_Modelo
 
+
+class Raspberry(models.Model):
+    UBICACIONES_CHOICES = (
+        ('Entrada', 'Entrada'),
+        ('Comedor', 'Comedor'),
+        ('Taller', 'Taller'),
+    )
+    
+    nombre = models.CharField(max_length=50)
+    ubicacion = models.CharField(max_length=50, choices= UBICACIONES_CHOICES)
+    is_active = models.BooleanField(default=False, editable=False)
+    is_synchronized = models.BooleanField(default=False, editable=False)
+    have_model = models.BooleanField(default=False, editable=False)
+    ip_address = models.GenericIPAddressField()
+
+    modelo = models.OneToOneField(Modelo_Entrenado, models.SET_NULL, blank= True, null=True)
+
+    class Meta:
+        verbose_name_plural = "Raspberrys_Cámaras"
+    
+    def __str__(self):
+        return self.nombre
