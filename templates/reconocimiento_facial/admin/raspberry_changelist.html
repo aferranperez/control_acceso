@@ -10,5 +10,12 @@
 
 {% block object-tools %}
     <!-- Actualizar datos en tabla de admin--> 
-    {{ block.super }}
+    <div>
+        <form action="actualizar_estado/" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="boton">Actualizar Estado</button>
+        </form>
+        <br/>
+        {{ block.super }}
+    </div>
 {% endblock %}

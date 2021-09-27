@@ -4,8 +4,6 @@ from django.contrib import admin
 from django.db.models.deletion import CASCADE
 import os
 
-from django.db.models.fields import CharField
-
 # Create your models here.
 
 class Persona(models.Model):
@@ -57,8 +55,7 @@ class Persona(models.Model):
         
     def __str__(self):
         return '%s %s' % (self.nombre, self.apellido)
-
-  
+ 
 class Imagen(models.Model):
     
     def persona_directory_path(instance,filename):
@@ -117,7 +114,6 @@ class Miembro_del_Modelo(models.Model):
 class InLineMiembros(admin.TabularInline):
     model = Miembro_del_Modelo
 
-
 class Raspberry(models.Model):
     UBICACIONES_CHOICES = (
         ('Entrada', 'Entrada'),
@@ -131,7 +127,7 @@ class Raspberry(models.Model):
     is_synchronized = models.BooleanField(default=False, editable=False)
     have_model = models.BooleanField(default=False, editable=False)
     ip_address = models.GenericIPAddressField()
-
+    id_suscribe = models.CharField(max_length=50, editable=False, default=None)
     modelo = models.OneToOneField(Modelo_Entrenado, models.SET_NULL, blank= True, null=True)
 
     class Meta:
