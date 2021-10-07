@@ -5,6 +5,7 @@ import numpy as np
 from django.core.serializers import deserialize
 import datetime
 import time
+
 def entrenar_model(Modelo_Img):
 
     caras, nombres = preparar_datos(Modelo_Img)
@@ -14,12 +15,13 @@ def entrenar_model(Modelo_Img):
     face_recognizer.train(caras, np.array(nombres))
 
     tt = datetime.date.today().timetuple()
-    dir = "modulos_py/face_recognizer/modelos_entrenados/" + str(tt.tm_year) + "-" + str(tt.tm_mon) + "-" + str(tt.tm_mday) + "-" + str(time.time()) + "-" +"modelo.xml"
-    
-    face_recognizer.save(dir)
+    fecha = datetime.datetime.now()
 
-    file = str(tt.tm_year) + "-" + str(tt.tm_mon) + "-" + str(tt.tm_mday) + "-" + str(time.time()) + "-" + "modelo"
-    modelo = Modelo_Entrenado.objects.create(nombre = file)
+    dir = "modulos_py/face_recognizer/modelos_entrenados/" + str(fecha.year)+"-"+ str(fecha.month)+"-"+ str(fecha.day)+"-"+ str(fecha.hour)+"-"+str(fecha.minute)+"-"+str(fecha.second) +".xml" 
+    face_recognizer.save(dir)
+    name = str(fecha.year)+"-"+ str(fecha.month)+"-"+ str(fecha.day)+"-"+ str(fecha.hour)+"-"+str(fecha.minute)+"-"+str(fecha.second)
+
+    modelo = Modelo_Entrenado.objects.create(nombre = name)
     modelo.save()
    
     with open('tmp/data_personas_entrenar.json') as file:

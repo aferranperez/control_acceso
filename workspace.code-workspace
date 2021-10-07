@@ -2,7 +2,12 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "..\\cliente_Raspberry"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.pythonPath": "d:\\Cosas_de_la_Escuela\\Codigos_de_Programacion\\entornos_virtuales\\Windows\\sistema_IoT\\Scripts\\python.exe"
+	}
 }

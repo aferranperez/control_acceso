@@ -1,12 +1,11 @@
-from time import sleep
 from django.contrib import admin
 from django.shortcuts import render,HttpResponseRedirect
 from django.urls import path
 from shutil import *
 from django.core import serializers
 from paho.mqtt.client import Client
-
-
+from .mqtt import *
+from .network import *
 
 # Register your models here.
 from .models import *
@@ -59,14 +58,17 @@ class ModelosEntrenadosAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
     
-    def has_delete_permission(self, request, obj = None):
-        return False
+    #def has_delete_permission(self, request, obj = None):
+    #    return False
 
 #Clase para administrar el modelo de Raspberry
 class RaspberryModelAdmin(admin.ModelAdmin):
-    ip_broker = str("192.168.56.100")
-    client = Client(client_id="admin", clean_session=False, transport="tcp")
     
+    MQTT_SERVER = "192.168.56.100"
+    
+    client = Client(client_id="admin", clean_session=False, transport="tcp")
+    client.on_message = on_message 
+
     #Modifique metodos de la clase
     def get_urls(self):
         urls = super().get_urls()  
@@ -76,52 +78,54 @@ class RaspberryModelAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def actualizar_estado(self,request):
-        from .mqtt import on_message
-        import json
-             
-        self.client.on_message = on_message 
-        
+           
         payload = {
             'action' : 'get_state',
         }
-
-        try:
-            self.client.connect(self.ip_broker, port= 1883, keepalive=10) 
-            
-        except Exception as e:
-            error = 'Ha ocurrido un error de %s' % e
-            self.message_user(request, str(error) , level="error")
         
-        else:
-            payload = json.dumps(payload)
-            self.client.publish(topic="config_device/", payload= payload, qos=1)         
-            
-            self.client.subscribe("config_device/answer/", qos=1)
-            self.client.loop_start()          
-            sleep(5)    #doy 5 segundos para que todos los dispositivos actualicen
-            self.message_user(request, "Actualización con exito") 
+        publish_suscribe_config(self,payload,self.client,self.MQTT_SERVER,request)
         
-        finally:
-            self.client.loop_stop()
-            return HttpResponseRedirect("../")
+        return HttpResponseRedirect("../")
 
+    @admin.action(description="Sincronizar dispositivo /s")
+    def syncronize_devices(self, request, queryset):
+       
+        payload = {
+            'action' : 'syncronize',
+            'devices': '%s' %str({raspberry.ip_address for raspberry in queryset}),      
+        }
         
-        
-    @admin.action(description="Enviar mensaje a esa Raspberry")
-    def mensaje_MQTT(self, request, queryset):
-        from paho.mqtt import publish
-
-        publish.single("prueba/", payload="EXCELENTE", qos=2, retain=False, hostname="192.168.56.100", port=1883, transport="tcp")
-
+        print(payload['devices'])
+        publish_suscribe_config(self,payload,self.client,self.MQTT_SERVER,request)
     
+    @admin.action(description="Cargar modelo a dispositivo /s seleccionado /s")
+    def load_model(self, request, queryset):
+        
+        #for raspberry in queryset:
+        model_face = Modelo_Entrenado.objects.get(id = queryset[0].modelo_id)
+    
+        payload = {
+            'action' : 'load_model',
+            'data':{
+                'ip_destino': '%s' %queryset[0].ip_address ,
+                'model_id' : '%s' %model_face.id ,
+                'model_name' : '%s' %model_face.nombre,
+            }
+        }
+        print(payload)
+        publish_suscribe_config(self,payload,self.client,self.MQTT_SERVER,request)
+        
+          
+        return
+
+
     #Registre parametros aqui
-    list_display = ["nombre","ubicacion","is_active","is_synchronized","have_model","ip_address","id_suscribe"]
-    list_filter = ["is_active","is_synchronized","have_model"]
+    list_display = ["nombre","ubicacion","is_syncronize","is_active","have_model","ip_address","id_suscribe"]
+    list_filter = ["is_active","have_model"]
     search_fields = ["nombre"]
     ordering = ["nombre"]
-    actions = [mensaje_MQTT]
+    actions = [syncronize_devices, load_model]
     change_list_template = ["reconocimiento_facial/admin/raspberry_changelist.html"]
-        
           
 admin.site.register(Persona, PersonaModelAdmin)
 admin.site.register(Modelo_Entrenado, ModelosEntrenadosAdmin)

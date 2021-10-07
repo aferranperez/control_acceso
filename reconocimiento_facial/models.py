@@ -86,7 +86,7 @@ class InlineImage(admin.TabularInline):
     model = Imagen
 
 class Modelo_Entrenado(models.Model):
-    nombre = models.CharField(max_length= 50, editable=False)
+    nombre = models.CharField(max_length= 100, editable=False)
     fecha_creacion = models.DateTimeField(auto_now=False, auto_now_add=True)
     trabajadores = models.ManyToManyField(
         Persona,
@@ -124,10 +124,10 @@ class Raspberry(models.Model):
     nombre = models.CharField(max_length=50)
     ubicacion = models.CharField(max_length=50, choices= UBICACIONES_CHOICES)
     is_active = models.BooleanField(default=False, editable=False)
-    is_synchronized = models.BooleanField(default=False, editable=False)
+    is_syncronize = models.BooleanField(default=False, editable=False)
     have_model = models.BooleanField(default=False, editable=False)
-    ip_address = models.GenericIPAddressField()
-    id_suscribe = models.CharField(max_length=50, editable=False, default=None)
+    ip_address = models.GenericIPAddressField(editable=True)
+    id_suscribe = models.CharField(max_length=50, editable=False)
     modelo = models.OneToOneField(Modelo_Entrenado, models.SET_NULL, blank= True, null=True)
 
     class Meta:

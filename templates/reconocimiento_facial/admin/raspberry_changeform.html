@@ -1,0 +1,21 @@
+{% extends 'admin/change_form.html' %}
+{% load static %}
+ 
+
+{% block extrastyle %}
+    <link href="{%static 'css/reconocimiento_facial/admin_style/admin.css'%}" rel="stylesheet">
+    {{ block.super }}
+{% endblock %}
+    
+
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+
+    <form action="cargar_modelo/" method="POST" style="float: right;">
+        {% csrf_token %}
+        <input type="submit" class="submit-row" value="Subir Modelo">
+    </form>
+
+{% endblock %}
+    
