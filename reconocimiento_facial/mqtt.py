@@ -38,7 +38,7 @@ def on_message(client, userdata, message):
 
                     print(f'Conectado al servidor {ip_address}:{port}')
                     print("Conectado")
-                    print(f"Enviando modelo localizado en: {dir} ...")
+                    print(f"Enviando modelo localizado en: {dir}")
                     print("Enviando modelo...")
                     conexion.send_file(conn, dir)
                     print("Enviado.")
@@ -46,7 +46,7 @@ def on_message(client, userdata, message):
             except Exception as e:
                 print(e)
             else:
-                pass
+                conn.close()
 
 
 def publish_suscribe_config(self,payload,client,MQTT_SERVER,request):

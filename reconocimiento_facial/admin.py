@@ -78,7 +78,6 @@ class RaspberryModelAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def actualizar_estado(self,request):
-           
         payload = {
             'action' : 'get_state',
         }
@@ -89,7 +88,6 @@ class RaspberryModelAdmin(admin.ModelAdmin):
 
     @admin.action(description="Sincronizar dispositivo /s")
     def syncronize_devices(self, request, queryset):
-       
         payload = {
             'action' : 'syncronize',
             'devices': '%s' %str({raspberry.ip_address for raspberry in queryset}),      
@@ -103,7 +101,7 @@ class RaspberryModelAdmin(admin.ModelAdmin):
         
         #for raspberry in queryset:
         model_face = Modelo_Entrenado.objects.get(id = queryset[0].modelo_id)
-    
+
         payload = {
             'action' : 'load_model',
             'data':{
