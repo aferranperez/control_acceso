@@ -112,10 +112,10 @@ class RaspberryModelAdmin(admin.ModelAdmin):
                 'model_name' : '%s' %model_face.nombre,
             }
         }
+        print("Preparando paquete a enviar por MQTT...")
         print(payload)
         publish_suscribe_config(self,payload,self.client,self.MQTT_SERVER,request)
         
-          
         return
 
 
@@ -126,7 +126,7 @@ class RaspberryModelAdmin(admin.ModelAdmin):
     ordering = ["nombre"]
     actions = [syncronize_devices, load_model]
     change_list_template = ["reconocimiento_facial/admin/raspberry_changelist.html"]
-          
+
 admin.site.register(Persona, PersonaModelAdmin)
 admin.site.register(Modelo_Entrenado, ModelosEntrenadosAdmin)
 admin.site.register(Raspberry, RaspberryModelAdmin)

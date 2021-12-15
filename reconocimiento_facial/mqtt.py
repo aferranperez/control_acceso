@@ -27,7 +27,7 @@ def on_message(client, userdata, message):
             ip_address = payload_decode['data']['ip_address']
             port = payload_decode['data']['port']
             
-            print(f'{ip_address}:{port} solicitando carga de modelo')
+            print(f'Dispositivo {ip_address}:{port} solicitando carga de modelo')
 
             conexion = Socket_IoT()
             
@@ -35,9 +35,11 @@ def on_message(client, userdata, message):
                 with socket.create_connection((ip_address, port)) as conn:
                     #dir = "modulos_py/face_recognizer/modelos_entrenados/2021-9-20-1632117746.97755-modelo.xml"
                     dir = "modulos_py/face_recognizer/modelos_entrenados/" + payload_decode['data']['model_name'] + ".xml"
+
                     print(f'Conectado al servidor {ip_address}:{port}')
                     print("Conectado")
-                    print("Enviando archivo...")
+                    print(f"Enviando modelo localizado en: {dir} ...")
+                    print("Enviando modelo...")
                     conexion.send_file(conn, dir)
                     print("Enviado.")
                     
